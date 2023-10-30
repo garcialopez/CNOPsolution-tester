@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single test</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.2/math.js" integrity="sha512-SZF47arYfRSVmLDgkgsUNkKNha7brZ5WTCEIPNga3sh0Vw+Vs8hkslDKz0hvmovPqJrCKdH/4OlkxOFzueC+DA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+</head>
+
+<body>
+    <div class="container mt-5 card">
+
+        <form id="config-form" class="row align-items-center modal-header ">
+            <div class="col-12 text-center mb-3">
+                <h3 class="h3 modal-title">Información inicial</h3>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="num-variables" class="font-weight-bold">Número de variables de diseño:</label>
+                    <input type="number" id="num-variables" value="2" name="num-variables" class="form-control" required>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="num-restriccionse" class="font-weight-bold">Ingrese número de restricciones:</label>
+                    <input type="number" id="num-restricciones" value="2" name="num-restricciones" class="form-control" required>
+                </div>
+            </div>
+            <div class="col-md-3 mt-4">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-warning btn-block">Generar</button>
+                </div>
+            </div>
+        </form>
+        
+        <div id="formulario-generado" class="mb-3 mr-3">
+            <div class="col-12 mt-3 text-center">
+                <h5 class="h5">Generando formulario...</h5>
+            </div>
+        </div>
+
+    </div>
+
+   <script src="./js/Generador.js" type="module"></script> 
+
+</body>
+
+</html>
