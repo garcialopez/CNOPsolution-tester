@@ -1,59 +1,215 @@
-
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <title>Single Test - Define</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Single test</title>
+    <meta content="" name="keywords">
+    <meta content="" name="description">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+    <!-- Favicon -->
+    <link href="./img/favicon.ico" rel="icon">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.2/math.js" integrity="sha512-SZF47arYfRSVmLDgkgsUNkKNha7brZ5WTCEIPNga3sh0Vw+Vs8hkslDKz0hvmovPqJrCKdH/4OlkxOFzueC+DA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="./css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.2/math.js"
+        integrity="sha512-SZF47arYfRSVmLDgkgsUNkKNha7brZ5WTCEIPNga3sh0Vw+Vs8hkslDKz0hvmovPqJrCKdH/4OlkxOFzueC+DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 </head>
 
 <body>
-    <div class="container mt-5 card">
+    <div class="container-fluid position-relative ">
+        <!-- Content Start -->
+        <div class="content">
 
-        <form id="config-form" class="row align-items-center modal-header ">
-            <div class="col-12 text-center mb-3">
-                <h3 class="h3 modal-title">Información inicial</h3>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="num-variables" class="font-weight-bold">Número de variables de diseño:</label>
-                    <input type="number" id="num-variables" value="2" name="num-variables" class="form-control" required>
+            <!-- Menú de Navegación -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a href="./index.html" class="navbar-brand ml-2">
+                    <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>Mono Test</h3>
+                </a>
+
+                <div class="navbar-nav w-100 d-flex justify-content-end">
+                    <a href="./index.html" class="nav-item nav-link active"><i class="fa fa-keyboard me-2"></i>Define
+                        problem</a>
+                </div>
+            </nav>
+            <!-- Fin del menú de navegación -->
+
+            <!-- Form Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-2">
+                    <!-- ------------------------------------- -->
+                    <div class="col-sm-12 col-xl-3">
+                        <div class="bg-light rounded h-100 p-4">
+                            <h4 class="mb-4 h4">Details</h4>
+                            <form id="config-form">
+
+
+                                <h6 class="mb-4">Type of problem</h6>
+                                <div class="btn-group mb-4 d-flex w-100" role="group">
+                                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1"
+                                        autocomplete="off" checked>
+                                    <label class="btn btn-outline-success" for="btnradio1">Define</label>
+
+                                    <input type="radio" class="btn-check" name="btnradio" id="btnradio2"
+                                        autocomplete="off">
+                                    <label class="btn btn-outline-info" for="btnradio2">Benchmark</label>
+                                </div>
+
+                                <hr>
+                                <!-- ------------------------------------- -->
+                                <div id="div-define" style="display: block;">
+
+                                    <div class="mb-3">
+                                        <label for="num-variables" class="form-label">Number of design variables</label>
+                                        <input type="number" id="num-variables" value="1" name="num-variables"
+                                            class="form-control" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="num-restricciones" class="form-label">Number of constraints</label>
+                                        <input type="number" id="num-restricciones" value="0" name="num-restricciones"
+                                            class="form-control" required>
+                                    </div>
+
+                                </div>
+                                <!-- ------------------------------------- -->
+
+                                <div id="div-benchmark" style="display: none;">
+                                    <!-- select -->
+                                </div>
+
+
+                                <button type="submit" class="btn btn-warning w-100 mt-3">Next</button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- ------------------------------------- -->
+
+                    <div class="col-sm-12 col-xl-9">
+                        <div class="bg-light rounded h-100 p-4" id="formulario-generado">
+                            <h5 class="h5">Details of the optimization problem</h5>
+                            <form id="optimization-form">
+
+                                <div class="row">
+                                    <!-- ------------------------------------- -->
+                                    <div class="col-sm-12 col-xl-6">
+                                        <div class="h-100 p-4" id="div-variable">
+                                            <label>Details of variables</label>
+                                            <!-- variables -->
+                                        </div>
+                                    </div>
+                                    <!-- ------------------------------------- -->
+                                    <div class="col-sm-12 col-xl-6">
+                                        <div class="h-100 p-4" id="div-fo">
+                                            <label>Detail of the Objective Function and its Best Known Value</label>
+                                            <!-- FO and Best -->
+                                        </div>
+                                    </div>
+                                    <!-- ------------------------------------- -->
+                                    <hr>
+                                    <div class="col-sm-12 col-xl-6">
+                                        <div class="h-100 p-4" id="div-constrains">
+                                            <label>Details of constraints</label>
+                                            <!-- Constrains -->
+                                        </div>
+                                    </div>
+                                    <!-- ------------------------------------- -->
+                                    <div class="col-sm-12 col-xl-6">
+                                        <div class="h-100 p-4" id="div-values">
+                                            <label>Value of the variables</label>
+                                            <!-- values -->
+                                        </div>
+                                    </div>
+                                    <!-- ------------------------------------- -->
+                                </div>
+                                <div class="col-sm-12 col-xl-4 mx-auto">
+                                    <div class="d-grid gap-2" id="div-button">
+                                        <!-- Button -->
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xl-12">
+                        <div class="bg-light rounded h-100 p-4" id="div-result">
+                            <h5 class="h5">Results</h5>
+                            
+                            <div class="row"> <!-- row -->
+
+                                <!-- --------------------------------------------------------------------------- -->
+                                <div class="col-sm-12 col-xl-12 card">
+                                    <div class="h-100 p-4 card-body">
+                                        <div class="row">
+                                            <!-- --------------------------------- -->
+                                            <div class="col-sm-12 col-xl-12 mb-3" id="div-fo-result">
+                                                <!-- FO RESULT -->
+                                            </div>
+                                            <hr>
+                                            <!-- --------------------------------- -->
+                                            <div class="col-sm-12 col-xl-6" id="div-constrains-result">
+                                                <!-- CONSTRAINS RESULT -->
+                                            </div>
+                                            <!-- --------------------------------- -->
+                                            <div class="col-sm-12 col-xl-6" id="div-ranges-result">
+                                                <!-- RANGES RESULT -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div> <!-- close row -->
+
+                        </div>
+                    </div>
+
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="num-restricciones" class="font-weight-bold">Ingrese número de restricciones:</label>
-                    <input type="number" id="num-restricciones" value="2" name="num-restricciones" class="form-control" required>
+
+            <!-- Footer Start -->
+            <div class="container-fluid pt-4">
+                <div class="bg-light rounded-top p-4">
+                    <div class="row">
+                        <div class="col-12 col-sm-6 text-center text-sm-start">
+                            &copy; <a href="https://github.com/garcialopez/JMetaBFOP">2023 Single Test</a>, All Right
+                            Reserved.
+                        </div>
+                        <div class="col-12 col-sm-6 text-center text-sm-end">
+                            <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                            Designed By <a href="https://github.com/garcialopez">García-López</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3 mt-4">
-                <div class="form-group">
-                    <button type="submit" class="btn btn-warning btn-block">Generar</button>
-                </div>
-            </div>
-        </form>
-        
-        <div id="formulario-generado" class="mb-3 mr-3">
-            <div class="col-12 mt-3 text-center">
-                <h5 class="h5">Generando formulario...</h5>
-            </div>
+            <!-- Footer End -->
         </div>
-
+        <!-- Content End -->
     </div>
 
-   <script src="./js/Generador.js" type="module"></script> 
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script src="./js/Generador.js" type="module"></script>
 </body>
 
 </html>
