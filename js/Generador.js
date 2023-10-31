@@ -1,23 +1,138 @@
 import { formVariables, formFO, formConstrains, formValues } from './Forms.js'
+import PONR from "./PONR.js";
+
+let ponr = new PONR();
+
+let flag = true;
+let active = 'enabled';
+
+// elementos de radio
+let radioDefine = document.getElementById("btnradio1");
+let radioBenchmark = document.getElementById("btnradio2");
+
+// elementos a mostrar u ocultar
+let divDefine = document.getElementById("div-define");
+let divBenchmark = document.getElementById("div-benchmark");
+
+//extraer numeros de variables y restricciones
+let numVariables = document.getElementById('num-variables').value;
+let numConstrains = document.getElementById('num-restricciones').value;
+
+//variables para el problema de optimización
+let rangesVariables = [];
+let fo = '';
+let bvkn = 1000000;
+let constrains = [];
+
+//--------------------------------------------------------------------
+
+radioDefine.addEventListener("change", function () {
+    if (radioDefine.checked) {
+        flag = true;
+        active = 'enabled';
+        divDefine.style.display = "block"; // Muestra el componente "Define"
+        divBenchmark.style.display = "none"; // Oculta el componente "Benchmark"
+
+    }
+});
+
+radioBenchmark.addEventListener("change", function () {
+    if (radioBenchmark.checked) {
+
+        let listP = ponr.listPONR();
+        active = 'disabled';
+        let field = `
+            <label for="num-variables" class="form-label">Benchmark problems</label>
+            <select id="ponr-select" class="form-select form-select-sm" aria-label="Small select example"> 
+        `;
+
+        for (let i = 0; i < listP.length; i++) {
+            if (i == 0) {
+                field += `<option value="${i}" selected>${listP[i]}</option>`;
+            } else {
+                field += `<option value="${i}">${listP[i]}</option>`;
+            }
+        }
+
+        field += `</select>
+        <a href="https://github.com/garcialopez/JMetaBFOP-UI/tree/main/Results/JMetaBFOP" target="_blank" style="font-size: 14px;">Results of some problems</a>
+        `;
+
+        divBenchmark.innerHTML = field;
+        flag = false;
+        divDefine.style.display = "none"; // Oculta el componente "Define"
+        divBenchmark.style.display = "block"; // Muestra el componente "Benchmark"
+    }
+});
+
+
+//--------------------------------------------------------------------
 
 document.getElementById('config-form').addEventListener('submit', function (event) {
     event.preventDefault(); // Evitar el envío del formulario por defecto
 
-    //obtener numeros de variables y restricciones
-    const numVariables = document.getElementById('num-variables').value;
-    const numConstrains = document.getElementById('num-restricciones').value;
-
-    //generamos los campos de las variables
     const htmlVariables = document.getElementById('div-variable');
-    htmlVariables.innerHTML = fieldsVariables(numVariables);
-
-    //generamos los campos de la FO and Best
     const htmlFO = document.getElementById('div-fo');
-    htmlFO.innerHTML = formFO();
-
-    //generamos los campos para las restricciones
     const htmlConstrains = document.getElementById('div-constrains');
-    htmlConstrains.innerHTML = fieldsConstrains(numConstrains);
+
+    if (flag) {
+        //obtener numeros de variables y restricciones
+        numVariables = document.getElementById('num-variables').value;
+        numConstrains = document.getElementById('num-restricciones').value;
+
+        //generamos los campos de las variables, FO, restricciones
+        htmlVariables.innerHTML = fieldsVariables(numVariables);
+        htmlFO.innerHTML = formFO(active);
+        htmlConstrains.innerHTML = fieldsConstrains(numConstrains);
+
+    } else {
+        let valSelect = +document.getElementById('ponr-select').value;
+        let problem = null;
+        switch (valSelect) {
+            case 0:
+                problem = ponr.tensionCompressionSpring();
+                break;
+            case 1:
+                problem = ponr.pressureVessel();
+                break;
+            case 2:
+                problem = ponr.designReinforcedConcreteBeam();
+                break;
+            case 3:
+                problem = ponr.quadraticallyConstrainedQuadraticProgram();
+                break;
+        }
+
+        rangesVariables = problem.rangesVariables;
+        fo = problem.fo;
+        bvkn = problem.bvkn;
+        constrains = problem.constrains;
+
+        numVariables = rangesVariables.length;
+        numConstrains = constrains.length;
+
+        //generamos los campos de las variables, FO, restricciones
+        htmlVariables.innerHTML = fieldsVariables(numVariables);
+        htmlFO.innerHTML = formFO(active);
+        htmlConstrains.innerHTML = fieldsConstrains(numConstrains);
+
+        document.getElementById('funcion-objetivo').value = fo;
+        document.getElementById('mejor-conocido').value = bvkn;
+
+        for (let i = 0; i < numVariables; i++) {
+            document.getElementById('li-x' + (i + 1)).value = rangesVariables[i][0];
+            document.getElementById('ls-x' + (i + 1)).value = rangesVariables[i][1];
+        }
+
+        for (let i = 0; i < numConstrains; i++) {
+            document.getElementById('restriccion-' + (i + 1)).value = constrains[i].constrains;
+            document.getElementById('operador-r' + (i + 1)).value = constrains[i].comparator;
+            document.getElementById('r-' + (i + 1)).value = constrains[i].right;
+        }
+
+
+
+    }//close else
 
     //generamos los campos para los rangos
     const htmlValues = document.getElementById('div-values');
@@ -34,7 +149,7 @@ document.getElementById('config-form').addEventListener('submit', function (even
 
         //--------------------------------------------------------------Extraer valores
         //para los rangos de variables
-        let rangesVariables = [];
+
         let rangesSuccess = false;
 
         for (let i = 0; i < numVariables; i++) {
@@ -53,7 +168,7 @@ document.getElementById('config-form').addEventListener('submit', function (even
                     icon: 'warning',
                     title: 'Variables...',
                     text: 'Check variable ranges!'
-                  });    
+                });
 
                 document.getElementById('ls-x' + (i + 1)).value = '';
                 break;
@@ -62,44 +177,40 @@ document.getElementById('config-form').addEventListener('submit', function (even
         } //close for i 
 
         if (rangesSuccess) {
-            //funcion objetivo
-            let fo = '';
 
             //extraer función objetivo
             fo = document.getElementById('funcion-objetivo').value;
 
-            if (contieneVarNoValidas(fo, numVariables)) {                
-                
+            if (contieneVarNoValidas(fo, numVariables)) {
+
                 Swal.fire({
                     icon: 'warning',
                     title: 'Objective function...',
                     text: 'The objective function contains unrecognized variables. Please remember that you can only use variables like x1, x2, x3, ..., xn.'
-                  }); 
+                });
 
                 return;
             }//close if
 
             //mejor valor conocido
-            let bvkn = 1000000;
 
             //extraer mejor valor conocido
             bvkn = +document.getElementById('mejor-conocido').value;
 
             //evaluamos que el mejor valor conocido sea correcto
             if (isNaN(bvkn)) {
-                
+
                 Swal.fire({
                     icon: 'warning',
                     title: 'Best-known...',
                     text: 'The best-known value should be numeric. Since you have not entered a valid value, it will be assigned a value of 1,000,000.'
-                  }); 
+                });
                 bvkn = 1000000;
                 document.getElementById('mejor-conocido').value = '1000000';
             } //close if isNaN
 
             //extraer las restricciones si las hay
-            //restricciones
-            let constrains = [];
+            //restricciones            
 
             if (numConstrains > 0) {
                 for (let i = 0; i < numConstrains; i++) {
@@ -116,7 +227,7 @@ document.getElementById('config-form').addEventListener('submit', function (even
                             icon: 'warning',
                             title: 'Right-hand...',
                             text: 'The right-hand side of constraint ' + (i + 1) + ' is not correct. It will be assigned a value of 0.'
-                          }); 
+                        });
                     }// close if 
 
                     constrains[i] = {
@@ -145,7 +256,7 @@ document.getElementById('config-form').addEventListener('submit', function (even
                         icon: 'warning',
                         title: 'Values...',
                         text: 'The value for variable x' + (i + 1) + ' is not a number, we will assign it a value of 0.'
-                      }); 
+                    });
                 } //close if
                 values['x' + (i + 1)] = auxValue;
             } //close for
@@ -175,19 +286,19 @@ document.getElementById('config-form').addEventListener('submit', function (even
                 constrains[i].result = valueRes;
 
                 switch (comparator) {
-                    case "menor-igual":
+                    case "<=":
                         constrains[i].vc = (valueRes <= right);
                         break;
-                    case "mayor-igual":
+                    case ">=":
                         constrains[i].vc = (valueRes >= right);
                         break;
-                    case "igual":
+                    case "=":
                         constrains[i].vc = (valueRes == right);
                         break;
-                    case "menor-que":
+                    case "<":
                         constrains[i].vc = (valueRes < right);
                         break;
-                    case "mayor-que":
+                    case ">":
                         constrains[i].vc = (valueRes > right);
                         break;
                     default:
@@ -223,7 +334,7 @@ document.getElementById('config-form').addEventListener('submit', function (even
                         <th scope="col">#</th>
                         <th scope="col">Range</th>
                         <th scope="col">Value</th>
-                        <th scope="col">Status</th>
+                        <th scope="col">Feasible</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -245,7 +356,7 @@ document.getElementById('config-form').addEventListener('submit', function (even
                         <td>${key}</td>
                         <td>[${rangesVariables[i][0]} - ${rangesVariables[i][1]}]</td>
                         <td>${values[key]}</td>
-                        <td><i class="${classIcon}"></i></td>
+                        <td><i class="${classIcon}"></i> ${(rangesVariables[i][2]?"Yes":"No")}</td>
                     </tr>
                 `;
             } //close for
@@ -261,45 +372,45 @@ document.getElementById('config-form').addEventListener('submit', function (even
             const htmlConstrainsResult = document.getElementById('div-constrains-result');
             let auxConst = `
             <h6 class="h6" style="text-align: center;">Constraints</h6>
-            <table class="table table-bordered">
+            <table class="table table-bordered table-sm">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Value</th>
-                        <th scope="col">Status</th>
+                        <th scope="col">Feasible</th>
                     </tr>
                 </thead>
                 <tbody>
                 `;
 
-                for (let i = 0; i < constrains.length; i++) {
-                    const auxVC = constrains[i].vc;
-    
-                    let classIcon = 'fas fa-times-circle text-danger';
-                    let classRow = 'text-danger';
-    
-                    if (auxVC) {
-                        classIcon = 'fas fa-check-circle text-success';
-                        classRow = '';
-                    }//close if
-    
-                    auxConst += `
+            for (let i = 0; i < constrains.length; i++) {
+                const auxVC = constrains[i].vc;
+
+                let classIcon = 'fas fa-times-circle text-danger';
+                let classRow = 'text-danger';
+
+                if (auxVC) {
+                    classIcon = 'fas fa-check-circle text-success';
+                    classRow = '';
+                }//close if
+
+                auxConst += `
                         <tr class = "${classRow}">
-                            <td>g${i+1}</td>
+                            <td>g${i + 1}</td>
                             <td>${constrains[i].result}</td>
-                            <td><i class="${classIcon}"></i></td>
+                            <td><i class="${classIcon}"></i> ${(auxVC?"Yes":"No")}</td>
                         </tr>
                     `;
-                } //close for
+            } //close for
 
 
             auxConst += `
                 </tbody>
             </table>
                 `;
-                htmlConstrainsResult.innerHTML = auxConst;
+            htmlConstrainsResult.innerHTML = auxConst;
 
-                htmlConstrainsResult.scrollIntoView({ behavior: "smooth" });
+            htmlConstrainsResult.scrollIntoView({ behavior: "smooth" });
 
         } //close cierre de if validador de rangos
 
@@ -311,6 +422,7 @@ function fieldsValues(numVariables) {
     let fields = '';
     fields += `
         <label>Value of the variables</label>
+        <hr>
     `;
 
     for (let i = 0; i < numVariables; i++) {
@@ -327,10 +439,21 @@ function fieldsConstrains(numConstrains) {
     let fields = '';
     if (numConstrains > 0) {
 
-        fields += `<label>Details of constraints</label>`;
+        fields += `
+        <label>Details of constraints</label>
+        <hr>
+        <div class = "row">
+            <div class = "col-6">
+                <h6 class = "h6"> Expression </h6>
+            </div>
+            <div class = "col-6">
+                <h6 class = "h6"> Type </h6>
+            </div>
+        </div>
+        `;
         for (let i = 0; i < numConstrains; i++) {
             fields += `<div class="col-12">`;
-            fields += formConstrains(i + 1);
+            fields += formConstrains((i + 1), active);
             fields += `</div> `;
         }
         fields += `</div></div>`;
@@ -349,7 +472,7 @@ function fieldsConstrains(numConstrains) {
 function fieldsVariables(numVariables) {
     let fields = '';
     fields += `
-        <label>Details of variables</label>
+        <label>Details of variables</label>    
         <div class="row">
             <div class="col-4"></div>
             <div class="col-4"><h6 class="h6">Lower</h6></div>
@@ -360,7 +483,7 @@ function fieldsVariables(numVariables) {
     for (let i = 0; i < numVariables; i++) {
         //para los rangos 
         fields += `<div class="col-12">`;
-        fields += formVariables(i + 1);
+        fields += formVariables((i + 1), active);
         fields += `</div> `;
     }//close for 
 
