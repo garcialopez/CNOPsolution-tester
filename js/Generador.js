@@ -370,7 +370,7 @@ document.getElementById('config-form').addEventListener('submit', function (even
             const htmlConstrainsResult = document.getElementById('div-constrains-result');
             let auxConst = `
             <h6 class="h6" style="text-align: center;">Constraints</h6>
-            <table class="table table-bordered">
+            <table class="table table-bordered table-responsive table-hover">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
