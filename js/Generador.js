@@ -1,8 +1,8 @@
 import { formVariables, formFO, formConstrains, formValues } from './Forms.js'
 import PONR from "./PONR.js";
 
-let ponr = new PONR();
 
+let ponr = new PONR();
 let flag = true;
 let active = 'enabled';
 
@@ -140,7 +140,7 @@ document.getElementById('config-form').addEventListener('submit', function (even
 
     //generamos el botón
     const htmlBoton = document.getElementById('div-button');
-    htmlBoton.innerHTML = `<button type="submit" class="btn btn-success btn-block">Evaluar</button>`;
+    htmlBoton.innerHTML = `<button type="submit" class="btn btn-success btn-block">Evaluate</button>`;
 
     //preparamos las variables que almacenaran los valores
 
@@ -179,18 +179,7 @@ document.getElementById('config-form').addEventListener('submit', function (even
         if (rangesSuccess) {
 
             //extraer función objetivo
-            fo = document.getElementById('funcion-objetivo').value;
-
-            if (contieneVarNoValidas(fo, numVariables)) {
-
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Objective function...',
-                    text: 'The objective function contains unrecognized variables. Please remember that you can only use variables like x1, x2, x3, ..., xn.'
-                });
-
-                return;
-            }//close if
+            fo = document.getElementById('funcion-objetivo').value;            
 
             //mejor valor conocido
 
@@ -265,16 +254,37 @@ document.getElementById('config-form').addEventListener('submit', function (even
             //-------------------------------------------------------------- Evaluamos
             //Iniciamos evaluando que los rangos de variables sean correctos
 
+            let colorFO = "text-primary";
+
             for (let i = 0; i < rangesVariables.length; i++) {
                 const key = 'x' + (i + 1);
                 const value = values[key];
                 const li = rangesVariables[i][0];
                 const ls = rangesVariables[i][1];
                 rangesVariables[i][2] = value >= li && value <= ls;
+                
+                if(rangesVariables[i][2] == false){
+                    colorFO = "text-danger";
+                }
+
             }//cierre for 
 
             //evaluamos la función objetivo
-            let resultFO = math.evaluate(fo, values); //objetive function
+            let resultFO = NaN;
+
+
+            try {
+                //objetive function
+                resultFO = math.evaluate(fo, values);
+            } catch (error) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Objective function...',
+                    text: 'The objective function contains unrecognized variables. Please remember that you can only use variables like x1, x2, x3, ..., xn.'
+                });
+                return;
+            }
+
 
             //verificamos las restricciones
             for (let i = 0; i < constrains.length; i++) {
@@ -282,7 +292,20 @@ document.getElementById('config-form').addEventListener('submit', function (even
                 const comparator = constrains[i].comparator;
                 const right = parseFloat(constrains[i].right);
 
-                let valueRes = math.evaluate(funConstrains, values);
+                let valueRes = NaN;
+
+                try {
+                    
+                    valueRes = math.evaluate(funConstrains, values);
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Constraints ...',
+                        text: 'The constraints contains unrecognized variables. Please remember that you can only use variables like x1, x2, x3, ..., xn.'
+                    });
+                    return;
+                }
+
                 constrains[i].result = valueRes;
 
                 switch (comparator) {
@@ -304,6 +327,11 @@ document.getElementById('config-form').addEventListener('submit', function (even
                     default:
                         console.log("Opción no válida");
                 }
+
+                if(constrains[i].vc == false){
+                    colorFO = "text-danger";
+                }
+
             }//close for
 
 
@@ -314,14 +342,23 @@ document.getElementById('config-form').addEventListener('submit', function (even
                 <div class="row justify-content-center">
                     <div class="col-sm-12 col-xl-3 text-center">
                         <p class="mb-0">Objective function result</p>
-                        <h6 class="text-primary">f(x) = ${resultFO}</h6>
+                        <h6 class="${colorFO}">f(x) = ${resultFO}</h6>
                     </div>
                     <div class="col-sm-12 col-xl-3  text-center">
                         <p class="mb-0">Best Known Value</p>
                         <h6>${bvkn}</h6>
                     </div>
+                    <div class="col-sm-12 col-xl-3  text-center">
+                        <button id="btnImprimir" class="btn btn-warning w-100 mt-3">
+                            <i class="fas fa-print"></i> Print
+                        </button>
+                    </div>
                 </div>
             `;
+
+             // se asocia la funcion al evento click del boton
+            document.getElementById('btnImprimir').addEventListener('click', imprimirPagina);
+
 
             //generamos los campos de los rangos de variables
             const htmlRangesResult = document.getElementById('div-ranges-result');
@@ -490,26 +527,11 @@ function fieldsVariables(numVariables) {
     return fields;
 } // close fieldsVariables
 
-function contieneVarNoValidas(fo, numVariables) {
-    return false;
+function imprimirPagina() {
+    // Llamar a la función de impresión
+    window.print();
 }
 
-/*
-function generarEventoLaTeX(entrada, salida) {
-
-    document.getElementById(entrada).addEventListener('input', function () {
-        const latex = this.value;
-        const outputElement = document.getElementById(salida);
-        try {
-            outputElement.innerHTML = katex.renderToString(latex);
-        } catch (error) {
-            outputElement.innerHTML = 'Error de compilación LaTeX.';
-        }
-    });
-    
-
-} //cierra generarEventoLaTeX
-*/
 /*
 (0.05, 2);(0.25, 1.3);(2, 15)
 
