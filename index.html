@@ -10,7 +10,7 @@
 
     <!-- Favicon -->
     <link href="./img/favicon.ico" rel="icon">
-
+    
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +20,8 @@
     <link href="./css/bootstrap.min.css" rel="stylesheet">
     <link href="./css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link rel="stylesheet" href="https://shepherdjs.dev/dist/css/shepherd.css" />
+    <script src="./js/intro.js" type="module"></script>
 </head>
 
 <body>
@@ -37,6 +38,10 @@
                 <div class="navbar-nav w-100 d-flex justify-content-end">
                     <a href="./index.html" class="nav-item nav-link active"><i class="fa fa-keyboard me-2"></i>Define
                         problem</a>
+                        <a href="#" class="nav-item nav-link active help-button" onclick="startIntro()">
+                            <i class="fas fa-question-circle me-2"></i>Ayuda
+                        </a>
+                        
                 </div>
             </nav>
             <!-- Fin del menú de navegación -->
@@ -52,7 +57,7 @@
 
 
                                 <h6 class="mb-4">Type of problem</h6>
-                                <div class="btn-group mb-4 d-flex w-100" role="group">
+                                <div class="btn-group mb-4 d-flex w-100" id="typeProblem" role="group">
                                     <input type="radio" class="btn-check" name="btnradio" id="btnradio1"
                                         autocomplete="off" checked>
                                     <label class="btn btn-outline-success" for="btnradio1">Define</label>
@@ -86,7 +91,7 @@
                                 </div>
 
 
-                                <button type="submit" class="btn btn-warning w-100 mt-3">Next</button>
+                                <button type="submit" id="btnNext" class="btn btn-warning w-100 mt-3">Next</button>
                             </form>
                         </div>
                     </div>
@@ -147,7 +152,7 @@
                                 <!-- --------------------------------------------------------------------------- -->
                                 <div class="col-sm-12 col-xl-12 card">
                                     <div class="h-100 p-4 card-body">
-                                        <div class="row">
+                                        <div class="row" id="div-resultados">
                                             <!-- --------------------------------- -->
                                             <div class="col-sm-12 col-xl-12 mb-3" id="div-fo-result">
                                                 <!-- FO RESULT -->
@@ -200,6 +205,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="./js/Generador.js" type="module"></script>
+    
 </body>
 
 </html>
