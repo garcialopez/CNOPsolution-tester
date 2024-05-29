@@ -7,9 +7,10 @@ window.startIntro = function () {
     tour = new Shepherd.Tour({
         defaultStepOptions: {
             cancelIcon: { enabled: true },
-            classes: 'class-1 class-2',
+            classes: 'shepherd-theme-dark',
             scrollTo: { behavior: 'smooth', block: 'center' }
-        }
+        },
+        useModalOverlay: true
     });
 
     // Configuración del primer paso
@@ -47,6 +48,7 @@ window.startIntro = function () {
             , 'In this section, you should input the constraints of the problem.'
             , '#div-constrains', 'right', 1
         );
+        
 
     } else if (isVisible('div-benchmark')) {
         //----------------------------------------------------------------------------
@@ -91,6 +93,7 @@ window.startIntro = function () {
 
     // Inicia el recorrido
     tour.start();
+    document.querySelector('.shepherd-theme-arrows .shepherd-content').style.backgroundColor = 'red';
 }
 
 function isVisible(elemento) {
@@ -134,7 +137,16 @@ function tuto(step, text, element, pos, index) {
                 },
                 text: option2
             }
-        ]
+        ],
+        when: {
+            show: function () {
+                const el = document.querySelector('.shepherd-theme-dark .shepherd-header');
+                if (el) {
+                    el.style.backgroundColor = '#84b6f4';
+                }
+            }
+        }
+
     });
 
 }
