@@ -1,4 +1,4 @@
-import { } from "https://shepherdjs.dev/dist/js/shepherd.min.js";
+import { } from "https://cdnjs.cloudflare.com/ajax/libs/shepherd.js/7.1.2/js/shepherd.min.js";
 
 
 let tour;
