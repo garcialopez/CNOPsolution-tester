@@ -101,6 +101,12 @@ document.getElementById('config-form').addEventListener('submit', function (even
             case 3:
                 problem = ponr.quadraticallyConstrainedQuadraticProgram();
                 break;
+            case 4:
+                problem = ponr.ProcessSynthesisKocis98();
+                break;
+            case 5:
+                problem = ponr.ProcessSynthesisYuan88();
+                break;
         }
 
         rangesVariables = problem.rangesVariables;

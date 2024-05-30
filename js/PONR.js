@@ -6,6 +6,8 @@ export default class PONR {
             , "PressureVessel"
             , "Design Reinforced Concrete Beam"
             , "Quadratically Constrained Quadratic Program"
+            , "Process Synthesis Kocis 98"
+            , "Process Synthesis Yuan 88"
         ];
     }
 
@@ -126,7 +128,7 @@ export default class PONR {
         return ponr;
 
     }
-
+//------------------------------------------------- -------------------------
     quadraticallyConstrainedQuadraticProgram() {
 
         let rangesVariables = [
@@ -166,6 +168,91 @@ export default class PONR {
         return ponr;
 
     }
+
+    //------------------------------------------------- -------------------------
+    ProcessSynthesisKocis98() {
+
+        let rangesVariables = [
+            [0,1.6],[0, 1]          
+        ];
+
+        let fo = 'x2 + 2 * x1';
+        let bvkn = 2.0;
+
+        let constrains = [];
+
+        constrains[0] = {
+            constrains: 'x1^2 - x2 + 1.25',
+            comparator: '<=',right: 0, result: 0, vc: false
+        };
+        constrains[1] = {
+            constrains: 'x1 + x2',
+            comparator: '<=', right: 1.6, result: 0, vc: false
+        };
+       
+        const ponr = {rangesVariables: rangesVariables, fo: fo,bvkn: bvkn,constrains: constrains };
+    
+        return ponr;
+
+    }
+
+    //------------------------------------------------- -------------------------
+    ProcessSynthesisYuan88() {
+
+        let rangesVariables = [
+            [0, 1.2],[0, 1.8], [0, 2.5], [0,1], [0,1], [0, 1], [0, 1]          
+        ];
+
+        let fo = '(x4 - 1)^2 + (x5 - 2)^2 + (x6 - 1)^2 - log10(x7 + 1) + (x1 - 1)^2 + (x2 - 2)^2 + (x3 - 3)^2';
+        let bvkn = 4.579582;
+
+        let constrains = [];
+        constrains[0] = {
+            constrains: 'x4 + x5 + x6 + x1 + x2 + x3',
+            comparator: '<=',right: 5, result: 0, vc: false
+        };
+        constrains[1] = {
+            constrains: 'x6^2 + x1^2 + x2^2 + x3^2',
+            comparator: '<=', right: 5.5, result: 0, vc: false
+        };
+        constrains[2] = {
+            constrains: 'x4 + x1',
+            comparator: '<=', right: 1.2, result: 0, vc: false
+        };
+        constrains[3] = {
+            constrains: 'x5 + x2',
+            comparator: '<=', right: 1.8, result: 0, vc: false
+        };
+        constrains[4] = {
+            constrains: 'x6 + x3',
+            comparator: '<=', right: 2.5, result: 0, vc: false
+        };
+        constrains[5] = {
+            constrains: 'x7 + x4',
+            comparator: '<=', right: 1.2, result: 0, vc: false
+        };
+        constrains[6] = {
+            constrains: 'x5^2 + x2^2',
+            comparator: '<=', right: 1.64, result: 0, vc: false
+        };
+        constrains[7] = {
+            constrains: 'x6^2 + x3^2',
+            comparator: '<=', right: 4.25, result: 0, vc: false
+        };
+        constrains[8] = {
+            constrains: 'x5^2 + x3^2',
+            comparator: '<=', right: 4.64, result: 0, vc: false
+        };
+
+        
+       
+        const ponr = {rangesVariables: rangesVariables, fo: fo,bvkn: bvkn,constrains: constrains };
+    
+        return ponr;
+
+    }
+
+    
 
 
 }// close class
